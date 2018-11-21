@@ -4,7 +4,7 @@ import board
 import adafruit_amg88xx
 
 from subprocess import call
-from datetime
+import datetime
 
 SAMPLE_RATE = 1 # Hz
 SAMPLES_BETWEEN_TIME_CHECK = 300 # check time approx. every 5 minutes
