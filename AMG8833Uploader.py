@@ -46,6 +46,7 @@ class AMG8833Uploader:
         """
         Checks the current time and closes the file and calls for upload when hour has changed
         """
+
         # Get new time
         new_time = datetime.datetime.now()
 
@@ -71,6 +72,7 @@ class AMG8833Uploader:
         """
         Uploads the current file via a call to a Dropbox-Uploader script
         """
+
         output_path = "/home/pi/Desktop/Projects/SIOT_Project/output_data/"
         upload = "/home/pi/Desktop/Projects/SIOT_Project/Dropbox-Uploader/dropbox_uploader.sh upload " + output_path + \
                  self.filename + " " + self.filename
@@ -80,18 +82,24 @@ class AMG8833Uploader:
         """
         Reads raw data from the sensor and writes it to a file
         """
+
+        data = []
         for row in self.amg.pixels:
             # Pad to 1 decimal place
-            data = ['{0:.1f}'.format(temp) for temp in row]
-            self.file.write(str(data))
-            self.file.write("")
+            row_data = ['{0:.1f}'.format(temp) for temp in row]
+            data.append(row_data)
+
+        self.file.write(str(data))
         self.file.write("\n")
 
         if debug:
+            debug_data = []
             for row in self.amg.pixels:
                 # Pad to 1 decimal place
-                print(['{0:.1f}'.format(temp) for temp in row])
-                print("")
+                debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
+                debug_data.append(debug_row_data)
+
+            print(str(debug_data))
             print("\n")
 
         # Sleep for our sampling rate
