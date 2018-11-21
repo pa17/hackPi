@@ -82,7 +82,8 @@ class AMG8833Uploader:
         """
         for row in self.amg.pixels:
             # Pad to 1 decimal place
-            self.file.write(['{0:.1f}'.format(temp) for temp in row])
+            data = ['{0:.1f}'.format(temp) for temp in row]
+            self.file.write(str(data))
             self.file.write("")
         self.file.write("\n")
 
