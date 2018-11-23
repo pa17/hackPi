@@ -7,7 +7,7 @@ from subprocess import call
 import datetime
 
 SAMPLE_RATE = 1 # Hz
-SAMPLES_BETWEEN_TIME_CHECK = 300 # check time approx. every 5 minutes
+SAMPLES_BETWEEN_TIME_CHECK = 10 # check time every 10th loop
 
 
 class AMG8833Uploader:
