@@ -89,7 +89,7 @@ class AMG8833Uploader:
             row_data = ['{0:.1f}'.format(temp) for temp in row]
             data.append(row_data)
 
-        self.file.write(datetime.datetime.now() + ";" + str(data))
+        self.file.write(str(datetime.datetime.now()) + ";" + str(data))
         self.file.write("\n")
 
         if debug:
@@ -99,7 +99,7 @@ class AMG8833Uploader:
                 debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
                 debug_data.append(debug_row_data)
 
-            print(datetime.datetime.now() + ";" + str(debug_data))
+            print(str(datetime.datetime.now()) + ";" + str(debug_data))
             print("\n")
 
         # Sleep for our sampling rate
