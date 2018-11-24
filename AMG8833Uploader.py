@@ -2,6 +2,7 @@ import time
 import busio
 import board
 import adafruit_amg88xx
+import json
 
 from subprocess import call
 import datetime
@@ -99,8 +100,8 @@ class AMG8833Uploader:
             row_data = ['{0:.1f}'.format(temp) for temp in row]
             data.append(row_data)
 
-        self.file.write(str(datetime.datetime.now()) + ";" + str(data))
-        self.file.write("\n")
+        line_data = {str(datetime.datetime.now()): data}
+        json.dump(line_data, self.file)
 
         if debug:
             debug_data = []
