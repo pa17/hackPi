@@ -31,8 +31,13 @@ class AMG8833Uploader:
         current_day = self.current_time.day
         current_hour = self.current_time.hour
 
+        if current_hour < 10:
+            extra_digit = '0'
+        else:
+            extra_digit = ''
+
         # Output file
-        self.filename = 'data_' + str(current_month) + str(current_day) + '_' + str(current_hour) + ".txt"
+        self.filename = 'data_' + str(current_month) + str(current_day) + extra_digit + str(current_hour) + ".txt"
         self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
         while True:
@@ -57,12 +62,17 @@ class AMG8833Uploader:
             new_day = new_time.day
             new_hour = new_time.hour
 
+            if new_hour < 10:
+                extra_digit = '0'
+            else:
+                extra_digit = ''
+
             # Close file and upload it
             self.file.close()
             self.upload_file()
 
             # Create a new file
-            self.filename = 'data_' + str(new_month) + str(new_day) + '_' + str(new_hour) + ".txt"
+            self.filename = 'data_' + str(new_month) + str(new_day) + extra_digit + str(new_hour) + ".txt"
             self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
             # Make new_time to current_time

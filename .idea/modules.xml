@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/hackPi.iml" filepath="$PROJECT_DIR$/.idea/hackPi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/siot_coursework.iml" filepath="$PROJECT_DIR$/.idea/siot_coursework.iml" />
     </modules>
   </component>
 </project>
