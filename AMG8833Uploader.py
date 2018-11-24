@@ -102,6 +102,7 @@ class AMG8833Uploader:
 
         line_data = {str(datetime.datetime.now()): data}
         json.dump(line_data, self.file)
+        self.file.write('\n')
 
         if debug:
             debug_data = []
