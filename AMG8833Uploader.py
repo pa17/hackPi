@@ -97,12 +97,11 @@ class AMG8833Uploader:
         data = []
         for row in self.amg.pixels:
             # Pad to 1 decimal place
-            row_data = ['{0:.1f}'.format(temp) for temp in row]
+            row_data = [float(round(temp, 2)) for temp in row]
             data.append(row_data)
 
-        line_data = {str(datetime.datetime.now()): data}
+        line_data = [str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), data]
         json.dump(line_data, self.file)
-        self.file.write('\n')
 
         if debug:
             debug_data = []
