@@ -28,6 +28,7 @@ class AMG8833Uploader:
         # Time at boot-up for output file
         self.current_time = datetime.datetime.now()
 
+        current_year = self.current_time.year - 2000 # Dont' care about millenium
         current_month = self.current_time.month
         current_day = self.current_time.day
         current_hour = self.current_time.hour
@@ -38,7 +39,8 @@ class AMG8833Uploader:
             extra_digit = ''
 
         # Output file
-        self.filename = 'data_' + str(current_month) + str(current_day) + extra_digit + str(current_hour) + ".txt"
+        self.filename = 'data_' + str(current_year) + str(current_month) + str(current_day) + extra_digit + \
+                        str(current_hour) + ".txt"
         self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
         while True:
@@ -56,9 +58,11 @@ class AMG8833Uploader:
         # Get new time
         new_time = datetime.datetime.now()
 
-        # If hour has incremented or is back at 0 -> New hour has begun
-        if new_time.hour > self.current_time.hour or new_time.hour == 0:
+        # If hour has incremented or is back at 0 -> New day has begun
+        if new_time.hour > self.current_time.hour or new_time.day > self.current_time.day or new_time.month \
+                > self.current_time.month or new_time.year > self.current_time.year:
 
+            new_year = new_time.year - 2000 # Don't care about the millenium
             new_month = new_time.month
             new_day = new_time.day
             new_hour = new_time.hour
@@ -73,7 +77,8 @@ class AMG8833Uploader:
             self.upload_file()
 
             # Create a new file
-            self.filename = 'data_' + str(new_month) + str(new_day) + extra_digit + str(new_hour) + ".txt"
+            self.filename = 'data_' + str(new_year) + str(new_month) + str(new_day) + extra_digit + \
+                            str(new_hour) + ".txt"
             self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
             # Make new_time to current_time
