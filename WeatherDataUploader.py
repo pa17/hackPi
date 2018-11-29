@@ -130,7 +130,7 @@ class WeatherUploader:
         # Check if it's the same time as the previous one, if it's not add it to the file.
         duplicate = False
         try:
-            for line in self.file:
+            for line in self.file.readlines():
                 # If the reference times are the same
                 if line_data[0] == line[0]:
                     duplicate = True
@@ -140,6 +140,7 @@ class WeatherUploader:
 
         # File is empty
         except:
+            print("Error: Cannot search file for duplicates...")
             pass
 
         if not duplicate:
