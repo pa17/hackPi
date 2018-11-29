@@ -2,6 +2,7 @@ import time
 import pyowm
 import json
 import datetime
+import sys
 from subprocess import call
 
 PERIOD = 300  # Check if there is new measurement every 5 minutes
@@ -46,11 +47,18 @@ class WeatherUploader:
         self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
         while True:
-            # Check the new time
-            self.check_time()
 
-            # Append the new observed values
-            self.append_data()
+            try:
+                # Check the new time
+                self.check_time()
+
+                # Append the new observed values
+                self.append_data()
+
+            except:
+                print("Unexpected error:", sys.exc_info()[0])
+                pass
+
 
     def check_time(self):
         """
@@ -111,8 +119,8 @@ class WeatherUploader:
 
         line_data = [str(ref_time.strftime("%Y-%m-%d %H:%M:%S")), temp, status, detailed_status]
 
-        # Check if it's the same data as the previous one, if it's not add it to the file.
-        if line_data != self.last_line:
+        # Check if it's the same time as the previous one, if it's not add it to the file.
+        if line_data[0] != self.last_line[0]:
             json.dump(line_data, self.file)
             self.file.write("\n")
 
