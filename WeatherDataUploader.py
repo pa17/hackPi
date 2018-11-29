@@ -55,6 +55,7 @@ class WeatherUploader:
         Checks the current time and closes the file and calls for upload when hour has changed
         """
 
+        self.observation = self.owm.weather_at_place('London,GB')
         weather_now = self.observation.get_weather()
         new_ref_time = datetime.datetime.fromtimestamp(weather_now.get_reference_time())
 
