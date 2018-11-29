@@ -5,7 +5,7 @@ import datetime
 import sys
 from subprocess import call
 
-PERIOD = 300  # Check if there is new measurement every 5 minutes
+PERIOD = 120  # Check if there is new measurement every 2 minutes
 
 class WeatherUploader:
     """
@@ -95,6 +95,9 @@ class WeatherUploader:
             # Make new_ref_time to current_ref_time
             self.current_ref_time = new_ref_time
 
+        print("TIME CHECKED")
+        print("\n")
+
     def upload_file(self):
         """
         Uploads the current file via a call to a Dropbox-Uploader script
@@ -124,10 +127,10 @@ class WeatherUploader:
             json.dump(line_data, self.file)
             self.file.write("\n")
 
-            print(line_data)
+            print("DATA APPENDED: ", line_data)
             print("\n")
 
-        self.last_line = line_data
+            self.last_line = line_data
 
         # Sleep for our sampling rate
         time.sleep(self.period)
