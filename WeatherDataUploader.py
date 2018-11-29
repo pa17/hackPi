@@ -26,6 +26,8 @@ class WeatherUploader:
         current_weather = self.observation.get_weather()
         self.current_ref_time = datetime.datetime.fromtimestamp(current_weather.get_reference_time())
 
+        self.last_line = ""
+
         # Determine filename
         current_year = self.current_ref_time.year - 2000 # Dont' care about millenium
         current_month = self.current_ref_time.month
@@ -108,11 +110,16 @@ class WeatherUploader:
         detailed_status = weather_now.get_detailed_status()
 
         line_data = [str(ref_time.strftime("%Y-%m-%d %H:%M:%S")), temp, status, detailed_status]
-        json.dump(line_data, self.file)
-        self.file.write("\n")
 
-        print(line_data)
-        print("\n")
+        # Check if it's the same data as the previous one, if it's not add it to the file.
+        if line_data != self.last_line:
+            json.dump(line_data, self.file)
+            self.file.write("\n")
+
+            print(line_data)
+            print("\n")
+
+        self.last_line = line_data
 
         # Sleep for our sampling rate
         time.sleep(self.period)
