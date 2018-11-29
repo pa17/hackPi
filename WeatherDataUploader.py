@@ -12,7 +12,9 @@ class WeatherUploader:
     Fetches weather data from OpenWeatherMap and uploads it to Dropbox
     """
 
-    def __init__(self):
+    def __init__(self, debug=False):
+
+        self.debug = debug
 
         # Period at which IR sensor is sampled
         self.period = PERIOD
@@ -26,8 +28,6 @@ class WeatherUploader:
         # Get the current weather
         current_weather = self.observation.get_weather()
         self.current_ref_time = datetime.datetime.fromtimestamp(current_weather.get_reference_time())
-
-        self.last_line = [[]]
 
         # Determine filename
         current_year = self.current_ref_time.year - 2000 # Dont' care about millenium
@@ -58,6 +58,7 @@ class WeatherUploader:
             except KeyboardInterrupt:
                 raise
 
+            # If API Error happens...
             except:
                 print("Unexpected error:", sys.exc_info()[0])
                 pass
@@ -98,8 +99,9 @@ class WeatherUploader:
             # Make new_ref_time to current_ref_time
             self.current_ref_time = new_ref_time
 
-        print("TIME CHECKED")
-        print("\n")
+        if self.debug:
+            print("TIME CHECKED")
+            print("\n")
 
     def upload_file(self):
         """
@@ -126,14 +128,27 @@ class WeatherUploader:
         line_data = [str(ref_time.strftime("%Y-%m-%d %H:%M:%S")), temp, status, detailed_status]
 
         # Check if it's the same time as the previous one, if it's not add it to the file.
-        if line_data[0] != self.last_line[0]:
+        duplicate = False
+        try:
+            for line in self.file:
+                # If the reference times are the same
+                if line_data[0] == line[0]:
+                    duplicate = True
+
+                if self.debug:
+                    print(line)
+
+        # File is empty
+        except:
+            pass
+
+        if not duplicate:
             json.dump(line_data, self.file)
             self.file.write("\n")
 
-            print("DATA APPENDED: ", line_data, " to ", self.filename)
-            print("\n")
-
-            self.last_line = line_data
+            if self.debug:
+                print("DATA APPENDED: ", line_data, " to ", self.filename)
+                print("\n")
 
         # Sleep for our sampling rate
         time.sleep(self.period)
@@ -141,4 +156,4 @@ class WeatherUploader:
 
 if __name__ == '__main__':
 
-    weather_data_node = WeatherUploader()
+    weather_data_node = WeatherUploader(True)
