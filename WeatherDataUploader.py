@@ -27,7 +27,7 @@ class WeatherUploader:
         current_weather = self.observation.get_weather()
         self.current_ref_time = datetime.datetime.fromtimestamp(current_weather.get_reference_time())
 
-        self.last_line = ""
+        self.last_line = [[]]
 
         # Determine filename
         current_year = self.current_ref_time.year - 2000 # Dont' care about millenium
