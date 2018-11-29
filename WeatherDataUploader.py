@@ -46,6 +46,9 @@ class WeatherUploader:
 
         self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
+        # Init duplicate check list
+        self.duplicate_check_list = []
+
         while True:
 
             try:
@@ -91,6 +94,9 @@ class WeatherUploader:
             self.file.close()
             self.upload_file()
 
+            # Empty duplicate list
+            self.duplicate_check_list = []
+
             # Create a new file
             self.filename = 'wdata_' + str(new_year) + str(new_month) + str(new_day) + extra_digit + \
                             str(new_hour) + ".txt"
@@ -100,7 +106,7 @@ class WeatherUploader:
             self.current_ref_time = new_ref_time
 
         if self.debug:
-            print("TIME CHECKED")
+            print("Checking time...")
             print("\n")
 
     def upload_file(self):
@@ -129,27 +135,22 @@ class WeatherUploader:
 
         # Check if it's the same time as the previous one, if it's not add it to the file.
         duplicate = False
-        try:
-            for line in self.file.readlines():
-                # If the reference times are the same
-                if line_data[0] == line[0]:
-                    duplicate = True
-
-                if self.debug:
-                    print(line)
-
-        # File is empty
-        except:
-            print("Error: Cannot search file for duplicates...")
-            pass
+        for existing_ref_time in self.duplicate_check_list:
+            # If the reference times are the same
+            if line_data[0] == existing_ref_time:
+                duplicate = True
+                print("Skipping duplicate: ", line_data)
+                break
 
         if not duplicate:
             json.dump(line_data, self.file)
             self.file.write("\n")
 
             if self.debug:
-                print("DATA APPENDED: ", line_data, " to ", self.filename)
+                print("Appending entry: ", line_data, " to ", self.filename)
                 print("\n")
+
+        self.duplicate_check_list.append(line_data[0])
 
         # Sleep for our sampling rate
         time.sleep(self.period)
