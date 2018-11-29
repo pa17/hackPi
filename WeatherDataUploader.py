@@ -130,7 +130,7 @@ class WeatherUploader:
             json.dump(line_data, self.file)
             self.file.write("\n")
 
-            print("DATA APPENDED: ", line_data)
+            print("DATA APPENDED: ", line_data, " to ", self.filename)
             print("\n")
 
             self.last_line = line_data
