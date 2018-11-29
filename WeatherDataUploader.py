@@ -55,6 +55,9 @@ class WeatherUploader:
                 # Append the new observed values
                 self.append_data()
 
+            except KeyboardInterrupt:
+                raise
+
             except:
                 print("Unexpected error:", sys.exc_info()[0])
                 pass
