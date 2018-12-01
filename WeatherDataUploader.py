@@ -35,13 +35,24 @@ class WeatherUploader:
         current_day = self.current_ref_time.day
         current_hour = self.current_ref_time.hour
 
+        # Add leading zeroes to help with sorting filenames later
         if current_hour < 10:
-            extra_digit = '0'
+            edh = '0'
         else:
-            extra_digit = ''
+            edh = ''
+
+        if current_day < 10:
+            edd = '0'
+        else:
+            edd = ''
+
+        if current_month < 10:
+            edm = '0'
+        else:
+            edm = ''
 
         # Output file
-        self.filename = 'wdata_' + str(current_year) + str(current_month) + str(current_day) + extra_digit + \
+        self.filename = 'wdata_' + str(current_year) + edm + str(current_month) + edd + str(current_day) + edh + \
                         str(current_hour) + ".txt"
 
         self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
@@ -85,10 +96,21 @@ class WeatherUploader:
             new_day = new_ref_time.day
             new_hour = new_ref_time.hour
 
+            # Add leading zeroes to help with sorting filenames later
             if new_hour < 10:
-                extra_digit = '0'
+                edh = '0'
             else:
-                extra_digit = ''
+                edh = ''
+
+            if new_day < 10:
+                edd = '0'
+            else:
+                edd = ''
+
+            if new_month < 10:
+                edm = '0'
+            else:
+                edm = ''
 
             # Close file and upload it
             self.file.close()
@@ -98,7 +120,7 @@ class WeatherUploader:
             self.duplicate_check_list = []
 
             # Create a new file
-            self.filename = 'wdata_' + str(new_year) + str(new_month) + str(new_day) + extra_digit + \
+            self.filename = 'wdata_' + str(new_year) + edm + str(new_month) + edd + str(new_day) + edh + \
                             str(new_hour) + ".txt"
             self.file = open('/home/pi/Desktop/Projects/SIOT_Project/output_data/' + self.filename, 'w')
 
