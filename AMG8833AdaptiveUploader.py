@@ -137,7 +137,8 @@ class AMG8833AdaptiveUploader:
             data.append(row_data)
 
         # Turn track mode on...
-        if self.amg.pixels.max() >= 14 and self.amg.pixels.std() > 2.0:
+        nppixels = np.array(data)
+        if nppixels.max() >= 14 and nppixels.std() > 2.0:
             self.track = True
 
             if debug:
