@@ -138,20 +138,20 @@ class AMG8833AdaptiveUploader:
 
         # Turn track mode on...
         if self.amg.pixels.max() >= 14 and self.amg.pixels.std() > 2.0:
-        	self.track = True
+            self.track = True
 
-        	if debug:
-        		print("TRACK MODE: On! Time: ", str(datetime.datetime.now()))
+            if debug:
+                print("TRACK MODE: On! Time: ", str(datetime.datetime.now()))
 
-        	alerted = False
-        	temp_data.append(data)
+            alerted = False
+            temp_data.append(data)
 
         # Most of the times... OR: Turn track mode off again...
         else:
-        	# Set track flag to False, empty temp_data and set alerted as True
-        	self.track = False
-        	temp_data = []
-        	alerted = True
+            # Set track flag to False, empty temp_data and set alerted as True
+            self.track = False
+            temp_data = []
+            alerted = True
 
         line_data = [str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), data, self.track]
         json.dump(line_data, self.file)
@@ -168,38 +168,38 @@ class AMG8833AdaptiveUploader:
             #print("\n")
 
         if not self.track:
-        	# When Track mode is turned off again... Alert user via WhatsApp
-        	if not alerted:
-	        	if debug:
-	        		print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
-        		self.alert_user(temp_data)
+            # When Track mode is turned off again... Alert user via WhatsApp
+            if not alerted:
+                if debug:
+                    print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
+                self.alert_user(temp_data)
 
-        		if debug:
-        			print("SUCCESS: The user has been alerted! Time: ", str(datetime.datetime.now()))
-	        # Sleep for our sampling rate
-	        time.sleep(self.period)
+                if debug:
+                    print("SUCCESS: The user has been alerted! Time: ", str(datetime.datetime.now()))
+            # Sleep for our sampling rate
+            time.sleep(self.period)
 
-	def alert_user(self, temp_data, debug=True):
+    def alert_user(self, temp_data, debug=True):
+        
+        bicubics = []
 
-		bicubics = []
+        for i in range(len(temp_data)):
 
-    	for i in range(len(temp_data)):
+            pixels = []
+            points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
+            grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
+        
+            for row in temp_data[i][0]:
+                pixels = pixels + list(row)
 
-	  		pixels = []
-	    	points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
-	    	grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
-    	
-		    for row in temp_data[i][0]:
-		        pixels = pixels + list(row)
+            bicubics.append(griddata(points, pixels, (grid_x, grid_y), method='cubic'))
 
-		    bicubics.append(griddata(points, pixels, (grid_x, grid_y), method='cubic'))
+        if debug:
+            print("The bicubics array: ")
+            print(bicubics)
 
-		if debug:
-			print("The bicubics array: ")
-			print(bicubics)
-
-		for i in range(len(bicubics)):
-			plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images' + str(i), bicubics[i], format='png')
+        for i in range(len(bicubics)):
+            plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images' + str(i), bicubics[i], format='png')
 
 if __name__ == '__main__':
 
