@@ -152,9 +152,8 @@ class AMG8833AdaptiveUploader:
         # Most of the times... OR: Turn track mode off again...
         else:
             # Set track flag to False, empty temp_data and set alerted as True
-            self.track = False
+            self.track_over = True
             self.temp_data = []
-            self.alerted = True
 
         line_data = [str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), data, self.track]
         json.dump(line_data, self.file)
@@ -167,18 +166,23 @@ class AMG8833AdaptiveUploader:
                 debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
                 debug_data.append(debug_row_data)
 
-            #print(str(datetime.datetime.now()) + ";" + str(debug_data))
-            #print("\n")
+            print("NORMAL MODE: Time: ", str(datetime.datetime.now())
+            print("\n")
+
+        # When Track mode is turned off again... Alert user via WhatsApp
+        if not self.alerted and self.track_over:
+            if debug:
+                print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
+            self.alert_user(temp_data)
+            self.alerted = True
+
+            self.track_over = False
+            self.track = False
+
+            if debug:
+                print("SUCCESS: The user has been alerted! Time: ", str(datetime.datetime.now()))
 
         if not self.track:
-            # When Track mode is turned off again... Alert user via WhatsApp
-            if not self.alerted:
-                if debug:
-                    print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
-                self.alert_user(temp_data)
-
-                if debug:
-                    print("SUCCESS: The user has been alerted! Time: ", str(datetime.datetime.now()))
             # Sleep for our sampling rate
             time.sleep(self.period)
 
