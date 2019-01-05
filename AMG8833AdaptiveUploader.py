@@ -188,7 +188,10 @@ class AMG8833AdaptiveUploader:
             time.sleep(self.period)
 
     def alert_user(self, temp_data, debug=True):
-        
+        if debug:
+            print("The temp_data array: ")
+            print(temp_data)      
+
         bicubics = []
 
         for i in range(len(temp_data)):
@@ -197,8 +200,8 @@ class AMG8833AdaptiveUploader:
             points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
             grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
         
-            for row in temp_data[i][0]:
-                pixels = pixels + list(row)
+            for row in temp_data[i]:
+                pixels = pixels + row
 
             bicubics.append(griddata(points, pixels, (grid_x, grid_y), method='cubic'))
 
