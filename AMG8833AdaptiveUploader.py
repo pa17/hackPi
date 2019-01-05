@@ -34,6 +34,7 @@ class AMG8833AdaptiveUploader:
         self.track = False
         self.temp_data = []
         self.alerted = True
+        self.track_over = False
 
         # Time at boot-up for output file
         self.current_time = datetime.datetime.now()
