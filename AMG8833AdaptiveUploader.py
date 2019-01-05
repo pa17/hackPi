@@ -32,6 +32,8 @@ class AMG8833AdaptiveUploader:
 
         # Track Mode
         self.track = False
+        self.temp_data = []
+        self.alerted = True
 
         # Time at boot-up for output file
         self.current_time = datetime.datetime.now()
@@ -144,15 +146,15 @@ class AMG8833AdaptiveUploader:
             if debug:
                 print("TRACK MODE: On! Time: ", str(datetime.datetime.now()))
 
-            alerted = False
-            temp_data.append(data)
+            self.alerted = False
+            self.temp_data.append(data)
 
         # Most of the times... OR: Turn track mode off again...
         else:
             # Set track flag to False, empty temp_data and set alerted as True
             self.track = False
-            temp_data = []
-            alerted = True
+            self.temp_data = []
+            self.alerted = True
 
         line_data = [str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), data, self.track]
         json.dump(line_data, self.file)
@@ -170,7 +172,7 @@ class AMG8833AdaptiveUploader:
 
         if not self.track:
             # When Track mode is turned off again... Alert user via WhatsApp
-            if not alerted:
+            if not self.alerted:
                 if debug:
                     print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
                 self.alert_user(temp_data)
