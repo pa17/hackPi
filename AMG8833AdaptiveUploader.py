@@ -166,7 +166,7 @@ class AMG8833AdaptiveUploader:
                 debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
                 debug_data.append(debug_row_data)
 
-            print("NORMAL MODE: Time: ", str(datetime.datetime.now())
+            print("NORMAL MODE: Time: ", str(datetime.datetime.now()))
             print("\n")
 
         # When Track mode is turned off again... Alert user via WhatsApp
