@@ -174,7 +174,7 @@ class AMG8833AdaptiveUploader:
         if not self.alerted and self.track_over:
             if debug:
                 print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
-            self.alert_user(temp_data)
+            self.alert_user(self.temp_data)
             self.alerted = True
 
             self.track_over = False
