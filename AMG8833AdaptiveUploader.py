@@ -141,11 +141,11 @@ class AMG8833AdaptiveUploader:
 
         # Turn track mode on...
         nppixels = np.array(data)
-        if nppixels.max() >= 14 and nppixels.std() > 2.0:
+        if nppixels.max() >= 14 and nppixels.std() > 1.5:
             self.track = True
 
             if debug:
-                print("TRACK MODE: On! Time: ", str(datetime.datetime.now()))
+                print("TRACK MODE: On! Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
 
             self.alerted = False
             self.temp_data.append(data)
@@ -156,7 +156,7 @@ class AMG8833AdaptiveUploader:
             self.track_over = True
             self.temp_data = []
 
-        line_data = [str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")), data, self.track]
+        line_data = [datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3], data, self.track]
         json.dump(line_data, self.file)
         self.file.write("\n")
 
@@ -167,27 +167,31 @@ class AMG8833AdaptiveUploader:
                 debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
                 debug_data.append(debug_row_data)
 
-            print("NORMAL MODE: Time: ", str(datetime.datetime.now()))
+            print("NORMAL MODE: Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
             print("\n")
 
         # When Track mode is turned off again... Alert user via WhatsApp
-        if not self.alerted and self.track_over:
+        if not self.alerted and self.track_over and self.temp_data != []:
             if debug:
-                print("TRACK MODE: Off! Alerting user... Time: ", str(datetime.datetime.now()))
-            self.alert_user(self.temp_data)
+                print("TRACK MODE: Off! Alerting user... Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
+            self.save_images(self.temp_data)
             self.alerted = True
 
             self.track_over = False
             self.track = False
 
             if debug:
-                print("SUCCESS: The user has been alerted! Time: ", str(datetime.datetime.now()))
+                print("SUCCESS: The user has been alerted! Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
 
         if not self.track:
             # Sleep for our sampling rate
             time.sleep(self.period)
 
-    def alert_user(self, temp_data, debug=True):
+    def save_images(self, temp_data, debug=True):
+        """ 
+        Alerts the user with a Whatsapp message
+        """
+
         if debug:
             print("The temp_data array: ")
             print(temp_data)      
@@ -209,8 +213,7 @@ class AMG8833AdaptiveUploader:
             print("The bicubics array: ")
             print(bicubics)
 
-        for i in range(len(bicubics)):
-            plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images' + str(i), bicubics[i], format='png')
+        plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images/' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3], bicubics[-1], format='png')
 
 if __name__ == '__main__':
 
