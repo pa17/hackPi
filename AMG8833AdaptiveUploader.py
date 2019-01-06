@@ -185,7 +185,7 @@ class AMG8833AdaptiveUploader:
         for row in temp_data:
             pixels = pixels + row
 
-        bicubic = griddata(points, pixels, (grid_x, grid_y), method='cubic'))
+        bicubic = griddata(points, pixels, (grid_x, grid_y), method='cubic')
 
         if debug:
             print("The bicubic array: ")
