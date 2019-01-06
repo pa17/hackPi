@@ -35,7 +35,7 @@ class TelegramAlerter:
 
     def check_images(self):
 
-        available_images = os.listdir('/home/pi/Desktop/Projects/SIOT_Project/output_images/'))
+        available_images = os.listdir('/home/pi/Desktop/Projects/SIOT_Project/output_images/')
         new_image_count = len(available_images)
 
         if new_image_count > self.image_count:
