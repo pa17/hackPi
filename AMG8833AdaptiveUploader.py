@@ -178,24 +178,20 @@ class AMG8833AdaptiveUploader:
             print("The temp_data array: ")
             print(temp_data)      
 
-        bicubics = []
+        pixels = []
+        points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
+        grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
+    
+        for row in temp_data:
+            pixels = pixels + row
 
-        for i in range(len(temp_data)):
-
-            pixels = []
-            points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0, 64)]
-            grid_x, grid_y = np.mgrid[0:7:32j, 0:7:32j]
-        
-            for row in temp_data[i]:
-                pixels = pixels + row
-
-            bicubics.append(griddata(points, pixels, (grid_x, grid_y), method='cubic'))
+        bicubic = griddata(points, pixels, (grid_x, grid_y), method='cubic'))
 
         if debug:
-            print("The bicubics array: ")
-            print(bicubics)
+            print("The bicubic array: ")
+            print(bicubic)
 
-        plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images/' + datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S.%f'")[:-3], bicubics[-1], format='png')
+        plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images/' + datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S.%f'")[:-3], bicubic, format='png')
 
 if __name__ == '__main__':
 
