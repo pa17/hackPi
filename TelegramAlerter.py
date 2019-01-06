@@ -31,7 +31,7 @@ class TelegramAlerter:
         print("Got command: %s" % self.command)
 
         if self.command =='/update':
-            self.bot.sendMessage(self.chat_id, 'Update Requested! Last Person passed at: ' + self.latest_image)
+            self.bot.sendMessage(self.chat_id, 'Update Requested! Last Person passed at: ' + self.latest_image[:-3])
             self.bot.sendPhoto(self.chat_id, open('/home/pi/Desktop/Projects/SIOT_Project/output_images/'+self.latest_image, 'rb'))
 
     def check_images(self):
@@ -43,10 +43,9 @@ class TelegramAlerter:
             self.latest_image = available_images[-1]
             self.image_count = new_image_count
 
-            self.send_image(self.latest_image)
+            self.bot.sendMessage(self.chat_id, 'Threat Detected! Somebody is at your window at: ' + self.latest_image[:-3])
+            self.bot.sendPhoto(self.chat_id, open('/home/pi/Desktop/Projects/SIOT_Project/output_images/'+self.latest_image, 'rb'))
 
-    def send_image(self, filepath):
-        self.bot.sendPhoto(self.chat_id, open('/home/pi/Desktop/Projects/SIOT_Project/output_images/'+filepath, 'rb'))
 
 if __name__ == '__main__':
 
