@@ -32,9 +32,8 @@ class AMG8833AdaptiveUploader:
 
         # Track Mode
         self.track = False
-        self.temp_data = []
         self.alerted = True
-        self.track_over = False
+        self.temp_img = []
 
         # Time at boot-up for output file
         self.current_time = datetime.datetime.now()
@@ -143,49 +142,32 @@ class AMG8833AdaptiveUploader:
         nppixels = np.array(data)
         if nppixels.max() >= 14 and nppixels.std() > 1.5:
             self.track = True
-
-            if debug:
-                print("TRACK MODE: On! Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
-
             self.alerted = False
-            self.temp_data.append(data)
+            self.temp_img = data
 
         # Most of the times... OR: Turn track mode off again...
         else:
             # Set track flag to False, empty temp_data and set alerted as True
-            self.track_over = True
-            self.temp_data = []
+            self.track = False
 
         line_data = [datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3], data, self.track]
         json.dump(line_data, self.file)
         self.file.write("\n")
 
         if debug:
-            debug_data = []
-            for row in self.amg.pixels:
-                # Pad to 1 decimal place
-                debug_row_data = ['{0:.1f}'.format(temp) for temp in row]
-                debug_data.append(debug_row_data)
-
-            print("NORMAL MODE: Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
+            print("Track Mode: ", self.track," Time: ", datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S.%f'")[:-3])
             print("\n")
 
         # When Track mode is turned off again... Alert user via WhatsApp
-        if not self.alerted and self.track_over and self.temp_data != []:
+        if not self.alerted and not self.track and self.temp_img != []:
             if debug:
-                print("TRACK MODE: Off! Alerting user... Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
-            self.save_images(self.temp_data)
+                print("Saving image. Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
+            self.save_images(self.temp_img)
+
             self.alerted = True
+            self.temp_img = []
 
-            self.track_over = False
-            self.track = False
-
-            if debug:
-                print("SUCCESS: The user has been alerted! Time: ", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3])
-
-        if not self.track:
-            # Sleep for our sampling rate
-            time.sleep(self.period)
+        time.sleep(self.period)
 
     def save_images(self, temp_data, debug=True):
         """ 
