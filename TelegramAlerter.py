@@ -47,7 +47,9 @@ class TelegramAlerter:
     def send_image(self, filepath):
         self.bot.sendPhoto(chat_id, open('/home/pi/Desktop/Projects/SIOT_Project/output_images/'+filepath+'.png', 'rb'))
 
-
+if name == '__main__':
+    
+    TelegramAlerter = TelegramAlerter()
 
 
 
