@@ -15,7 +15,7 @@ class TelegramAlerter:
 
         print("I am listening...")
 
-        self.image_count = len(os.listdir('/home/pi/Desktop/Projects/SIOT_Project/output_images/'))
+        self.image_count = 0
         self.latest_image = ''
 
         while 1:
