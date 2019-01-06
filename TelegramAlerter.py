@@ -31,7 +31,7 @@ class TelegramAlerter:
         print("Got command: %s" % self.command)
 
         if self.command =='/update':
-            self.bot.sendMessage(self.chat_id, 'Update Requested!')
+            self.bot.sendMessage(self.chat_id, 'Update Requested! Last Person passed at: ' + self.latest_image)
             self.bot.sendPhoto(self.chat_id, open('/home/pi/Desktop/Projects/SIOT_Project/output_images/'+self.latest_image, 'rb'))
 
     def check_images(self):

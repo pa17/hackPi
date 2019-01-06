@@ -213,7 +213,7 @@ class AMG8833AdaptiveUploader:
             print("The bicubics array: ")
             print(bicubics)
 
-        plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images/' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f'")[:-3], bicubics[-1], format='png')
+        plt.imsave('/home/pi/Desktop/Projects/SIOT_Project/output_images/' + datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S.%f'")[:-3], bicubics[-1], format='png')
 
 if __name__ == '__main__':
 
